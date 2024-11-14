@@ -69,5 +69,11 @@ Route Table - connects subnets to gateways
 1. Associate subnet to route table
 2. Specify CIDR block that can access a gateway
 
+Network interface - attach EC2 instance in a subnet
+
+For you to have a public IP address via Elastic IP, your VPC/subnet needs to have an Internet Gateway
+
+Need to wait for 2/2 checks to pass, only then user-data is fully executed
+
 - .terraform folder is created when we initialize any plugins
 - terraform.tfstate keeps track of all resources created
