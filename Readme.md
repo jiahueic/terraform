@@ -50,7 +50,7 @@ This command downloads all necessary plugins and APIs required for your provider
 
 ```sh
 terraform plan
-terraform apply
+terraform apply --auto-approve
 ```
 
 ## Step 7: Clean up resources created by Terraform
@@ -58,3 +58,16 @@ terraform apply
 ```sh
 terraform destroy
 ```
+
+## Others
+
+Within each region, AWS has multiple data centres, so if one data centre goes down, the region doesn't go down (redundancy).
+availability zone = data centre?
+
+Route Table - connects subnets to gateways
+
+1. Associate subnet to route table
+2. Specify CIDR block that can access a gateway
+
+- .terraform folder is created when we initialize any plugins
+- terraform.tfstate keeps track of all resources created
