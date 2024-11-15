@@ -59,7 +59,47 @@ terraform apply --auto-approve
 terraform destroy
 ```
 
+## Show output
+
+```sh
+terraform state list
+terraform state show aws_vpc.my-first-vpc
+terraform output
+terraform refresh
+```
+
+## Delete/Create a specific resource
+
+```sh
+terraform destroy -target aws_instance.web-server-instance
+terraform apply -target aws_instance.web-server-instance
+```
+
+## Provide variable value using cmd line
+
+```sh
+terraform apply -var "subnet_prefix=10.0.100.0/24"
+```
+
+If var file named other than "terraform.tfvars" use the following command:
+
+```sh
+terraform apply -var-file example.tfvars
+```
+
 ## Others
+
+Three fields can be given to a value block
+
+1. description
+2. default
+3. type
+
+If working with var of type list, use:
+
+```sh
+var.subnet_prefix[0]
+```
 
 Within each region, AWS has multiple data centres, so if one data centre goes down, the region doesn't go down (redundancy).
 availability zone = data centre?

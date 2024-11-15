@@ -28,9 +28,13 @@ resource "aws_route_table" "prod-route-table" {
   }
 }
 # 4. Create a subnet
+variable "subnet_prefix" {
+  description = "cidr block for the subnet"
+
+}
 resource "aws_subnet" "subnet-1" {
   vpc_id            = aws_vpc.prod-vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = var.subnet_prefix
   availability_zone = "us-east-1a"
   tags = {
     Name = "prod-subnet"
@@ -83,17 +87,24 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 }
 
 # 7. Create a network interface with an ip in the subnet that was created in step 4
+variable "network_interface_ip" {
+  description = "private ip for network interface"
+}
 resource "aws_network_interface" "web-server-nic" {
   subnet_id       = aws_subnet.subnet-1.id
-  private_ips     = ["10.0.1.50"]
+  private_ips     = [var.network_interface_ip]
   security_groups = [aws_security_group.allow_web_traffic.id]
 }
 # 8. Assign an elastic IP to the network interface created in step 7
+
 resource "aws_eip" "lb" {
   network_interface         = aws_network_interface.web-server-nic.id
-  associate_with_private_ip = "10.0.1.50"
+  associate_with_private_ip = var.network_interface_ip
   vpc                       = true
   depends_on                = [aws_internet_gateway.gw, aws_instance.web-server-instance]
+}
+output "server_public_ip" {
+  value = aws_eip.lb.public_ip
 }
 # 9. Create Ubuntu server and install/enable apache2
 resource "aws_instance" "web-server-instance" {
@@ -118,5 +129,14 @@ resource "aws_instance" "web-server-instance" {
   }
 }
 
+output "server_private_ip" {
+  value = aws_instance.web-server-instance.private_ip
+
+
+}
+
+output "server_id" {
+  value = aws_instance.web-server-instance.id
+}
 
 
